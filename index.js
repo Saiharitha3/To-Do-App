@@ -790,7 +790,7 @@ function sortByDueDate(order) {
 }
 
 // Function to sort task list by priority
-function sortByPriority(order) {
+/*function sortByPriority(order) {
   const sortTaskList = JSON.parse(localStorage.getItem("tasks"));
 
   sortTaskList.sort((a, b) => {
@@ -811,7 +811,44 @@ function sortByPriority(order) {
   searchBar.classList.add("hidden");
   localStorage.setItem("tasks", JSON.stringify(sortTaskList));
   loadTasksFromLocalStorage();
+}*/
+
+function sortByPriority(order) {
+  let sortTaskList = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  // Ensure priorityValues exist
+  const priorityValues = { high: 3, medium: 2, low: 1 };
+
+  // Filter tasks based on completion status
+  let filteredTasks = sortTaskList.filter(task => {
+      if (order === "pending") return !task.completed;
+      if (order === "complete") return task.completed;
+      return true; // For "all", return all tasks
+  });
+
+  // Sort tasks by priority
+  filteredTasks.sort((a, b) => priorityValues[b.priority] - priorityValues[a.priority]);
+
+  // Clear current task list
+  while (taskList.firstChild) {
+      taskList.removeChild(taskList.firstChild);
+  }
+
+  // Hide elements if no tasks are available
+  if (filteredTasks.length === 0) {
+      tasksHeading.classList.add("hidden");
+      searchBar.classList.add("hidden");
+  } else {
+      tasksHeading.classList.remove("hidden");
+      searchBar.classList.remove("hidden");
+  }
+
+  // Update localStorage & re-render tasks
+  localStorage.setItem("tasks", JSON.stringify(sortTaskList));
+  loadTasksFromLocalStorage();
 }
+
+
 
 // Function to handle dropdown menu
 function myFunction() {
