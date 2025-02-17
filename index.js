@@ -1,5 +1,18 @@
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let currentSort = 'all';
+
+        function selectOption(all) {
+            document.getElementById('sort-btn').innerText = all;
+        }
+
+        function sortTasks(sortType) {
+            currentSort = sortType;
+            renderTasks();
+            toggleSortMenu();
+            
+            // Update button text
+            document.getElementById('sortButton').innerHTML = `<i class="fas fa-filter"></i> ${sortType.charAt(0).toUpperCase() + sortType.slice(1)}`;
+        }
         
         // Theme toggle functionality
         function toggleTheme() {
