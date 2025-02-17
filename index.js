@@ -213,7 +213,7 @@ let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
                         <span class="task-title">${task.name}</span>
                         <div class="task-actions">
                             <button class="complete-btn" onclick="toggleTaskStatus(${task.id})">
-                                ✅ Complete
+                                <i class="fas fa-complete"></i>
                             </button>
                             <button onclick="editTask(${task.id})">
                                 <i class="fas fa-edit"></i>
