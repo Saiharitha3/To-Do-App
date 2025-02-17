@@ -461,6 +461,9 @@ function addItem(e) {
   const currentDate = new Date();
   const dueDateObj = new Date(dueDate);
 
+  currentDate.setHours(0, 0, 0, 0);
+  dueDateObj.setHours(0, 0, 0, 0);
+
   //check if the tasks are duplicate
   if (checkForDuplicateTasks(newTaskTitle)) {
     showComfirmboxForDuplicateTasks();
