@@ -24,6 +24,104 @@ const priorityValues = {
   Low: 1,
 };
 
+const task = {
+  title: taskTitle,
+  dueDate: dueDate,
+  priority: priority,
+  completed: false // Default as pending when added
+};
+
+task[index].completed = true; // Mark task as completed
+localStorage.setItem("tasks", JSON.stringify(tasks)); // Save back to localStorage
+displayTasks(task); // Refresh UI
+
+function markTaskAsCompleted(taskElement) {
+  taskElement.classList.add("task-completed"); // Adds the class to mark it visually
+  saveTasksToLocalStorage(); // Update storage if necessary
+}
+
+function sortTasks(sortType) {
+  currentSort = sortType;
+  renderTasks();  // Ensure tasks get updated immediately
+}
+function renderTasks() {
+  const searchText = document.getElementById('searchInput').value.toLowerCase();
+  let filteredTasks = tasks;
+
+  // Apply search filter
+  if (searchText) {
+      filteredTasks = filteredTasks.filter(task => 
+          task.name.toLowerCase().includes(searchText) || 
+          task.description.toLowerCase().includes(searchText)
+      );
+  }
+
+  // Apply sort filter
+  if (currentSort === 'pending') {
+    filteredTasks = filteredTasks.filter(task => !task.completed);
+} else if (currentSort === 'completed') {
+    filteredTasks = filteredTasks.filter(task => task.completed);
+}
+
+
+  const taskList = document.getElementById('taskList');
+  
+  if (filteredTasks.length === 0) {
+      taskList.innerHTML = `
+          <div style="text-align: center; color: var(--task-details); padding: 20px;">
+              No tasks found
+          </div>
+      `;
+      return;
+  }
+
+  taskList.innerHTML = filteredTasks.map(task => `
+      <div class="task-card">
+          <div class="task-header">
+              <input type="checkbox" 
+                     class="task-checkbox" 
+                     ${task.completed ? 'checked' : ''} 
+                     onclick="toggleTaskStatus(${task.id})">
+              <span class="task-title">${task.name}</span>
+              <div class="task-actions">
+                  <button onclick="editTask(${task.id})">
+                      <i class="fas fa-edit"></i>
+                  </button>
+                  <button onclick="deleteTask(${task.id})">
+                      <i class="fas fa-trash"></i>
+                  </button>
+              </div>
+          </div>
+          <div class="task-details">
+              <div>${task.description}</div>
+              <div class="task-meta">
+                  Created: ${task.createdAt}
+                  ${task.dueDate ? `<br>Due Date: ${formatDateForDisplay(task.dueDate)}` : ''}
+              </div>
+          </div>
+      </div>
+  `).join('');
+}
+
+
+
+document.querySelectorAll(".dropdown-content a").forEach(item => {
+  item.addEventListener("click", function () {
+      const selectedOption = this.innerText.toLowerCase(); // Get selected text
+
+      if (selectedOption.includes("all")) {
+          filterTasksByStatus("all");
+      } else if (selectedOption.includes("pending")) {
+          filterTasksByStatus("pending");
+      } else if (selectedOption.includes("completed")) {
+          filterTasksByStatus("completed");
+      }
+  });
+});
+
+
+
+
 // Adding Event Listeners to Document Objects [buttons, text fields, dropdown lists]
 editTaskBtn.addEventListener("click", (e) => {
   handleEditClick(e);
@@ -39,7 +137,7 @@ checkboxes.forEach((checkbox) => {
 
 flatpickr(dueDateInput, {
   enableTime: false,
-  dateFormat: "Y-m-d",
+  dateFormat: "m-d-Y",
 });
 
 //settibng up default theme
@@ -460,6 +558,9 @@ function addItem(e) {
   // Check if the due date has already passed
   const currentDate = new Date();
   const dueDateObj = new Date(dueDate);
+
+  currentDate.setHours(0, 0, 0, 0);
+  dueDateObj.setHours(0, 0, 0, 0);
 
   //check if the tasks are duplicate
   if (checkForDuplicateTasks(newTaskTitle)) {
@@ -959,3 +1060,43 @@ function themeSwitcher() {
   }
 }
 themeSwitcher();
+
+function displayTasks(tasks) {
+  const taskContainer = document.getElementById("task-list"); // Ensure this ID exists in HTML
+  taskContainer.innerHTML = "";  // Clear the current task list
+
+  tasks.forEach(task => {
+      const taskElement = document.createElement("div");
+      taskElement.classList.add("task");
+      taskElement.innerHTML = `
+          <p>${task.title}</p>
+          <p>Due: ${task.dueDate}</p>
+          <p>Status: ${task.completed ? "✅ Completed" : "⌛ Pending"}</p>
+      `;
+      taskContainer.appendChild(taskElement);
+  });
+}
+
+
+function filterTasksByStatus(status) {
+  const tasks = document.querySelectorAll(".list-group-item"); // Get all tasks from UI
+
+  tasks.forEach(task => {
+      if (status === "all") {
+          task.style.display = "block"; // Show all tasks
+      } else if (status === "pending") {
+          if (task.classList.contains("task-completed")) {
+              task.style.display = "none"; // Hide completed tasks
+          } else {
+              task.style.display = "block"; // Show pending tasks
+          }
+      } else if (status === "completed") {
+          if (task.classList.contains("task-completed")) {
+              task.style.display = "block"; // Show completed tasks
+          } else {
+              task.style.display = "none"; // Hide pending tasks
+          }
+      }
+  });
+}
+

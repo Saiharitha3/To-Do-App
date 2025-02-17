@@ -164,23 +164,27 @@
         <div class="search-container mb-3">
           <input type="text" id="searchBar" placeholder=" Search tasks..."
             class="form-control w-75 mx-auto mt-3 inputcss">
-        </div>
         <!-- sorting elements -->
         <div class="text-center">
-    <div class="dropdown d-inline-block">
+       <div class="dropdown d-inline-block">
         <button class="btn btn-outline-dark dropbtn d-flex align-items-center ml-2" onclick="myFunction();">
             <ion-icon class="dropbtn" name="funnel-outline" style="font-size: 30px; margin-right: 6px"></ion-icon>
             Sort By
             <ion-icon class="dropbtn" name="chevron-down-outline" style="font-size: 20px; margin-left: 6px"></ion-icon>
         </button>
         <div id="myDropdown" class="dropdown-content ml-2 mt-0.5">
-            <a onclick="sortByPriority('highToLow');" class="a1">High to Low Priority</a>
-            <a onclick="sortByPriority('lowToHigh');" class="a2">Low to High Priority</a>
+            <a onclick="filterTasksByStatus('all');" class="a5">All Tasks</a>
+            <a onclick="filterTasksByStatus('pending');" class="a6">Pending Tasks</a>
+            <a onclick="filterTasksByStatus('completed');" class="a7">Completed Tasks</a>
+            <hr> <!-- Optional: Adds a separator -->
             <a onclick="sortByDueDate('early');" class="a3">Early To Do</a>
             <a onclick="sortByDueDate('late');" class="a4">Lately To Do</a>
         </div>
     </div>
 </div>
+</div>
+
+
 
 
         <!--Dynamic Task list-->
