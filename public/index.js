@@ -1,3 +1,18 @@
+fetch('http://localhost:3000/tasks')
+  .then(response => response.json())
+  .then(tasks => console.log(tasks))
+  .catch(error => console.error('Error fetching tasks:', error));
+
+  fetch('http://localhost:3000/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: 'New Task' })
+  })
+  .then(response => response.json())
+  .then(data => console.log('Task added:', data))
+  .catch(error => console.error('Error adding task:', error));  
+
+
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let currentSort = 'all';
 
