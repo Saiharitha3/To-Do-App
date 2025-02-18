@@ -1,9 +1,9 @@
-fetch('http://localhost:3000/tasks')
+fetch('https://to-do-app-u9u3.onrender.com')
   .then(response => response.json())
   .then(tasks => console.log(tasks))
   .catch(error => console.error('Error fetching tasks:', error));
 
-  fetch('http://localhost:3000/tasks', {
+  fetch('https://to-do-app-u9u3.onrender.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title: 'New Task' })
